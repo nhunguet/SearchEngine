@@ -87,4 +87,5 @@ url = 'https://scholar.google.com/citations?user=ztzAuOMAAAAJ&hl=en' # my schola
 papers = scrape_google_scholar(url)
 write_to_readme(papers)
 
-
+# See another example:
+# https://github.com/Winter24/Traffic_Flow_Predict_Webapp
