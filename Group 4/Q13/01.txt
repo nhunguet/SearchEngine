@@ -1,0 +1,2 @@
+What privacy risks arise when crawling data on desktops?
+What solutions can be implemented to ensure personal data is not misused?
