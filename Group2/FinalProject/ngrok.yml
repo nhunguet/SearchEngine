@@ -1,0 +1,8 @@
+version: "2"
+tunnels:
+  web:
+    addr: 4040
+    proto: http
+  api:
+    addr: 5000
+    proto: http
