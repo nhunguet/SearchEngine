@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đánh giá và Góp ý</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap'); /* Font công nghệ cao */
+
+        body {
+            font-family: 'Orbitron', sans-serif; /* Font công nghệ cao */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative; /* Để video làm nền */
+            overflow: hidden; /* Ẩn phần thừa của video */
+        }
+        /* Định dạng video YouTube làm nền */
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Đặt video phía sau nội dung */
+        }
+        .video-background iframe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 100vh;
+            transform: translate(-50%, -50%); /* Căn giữa video */
+            object-fit: cover; /* Đảm bảo video phủ toàn màn hình */
+        }
+        /* Điều chỉnh tỷ lệ khung hình để video không bị méo */
+        @media (min-aspect-ratio: 16/9) {
+            .video-background iframe {
+                height: 56.25vw; /* 100 * (9/16) */
+            }
+        }
+        @media (max-aspect-ratio: 16/9) {
+            .video-background iframe {
+                width: 177.78vh; /* 100 * (16/9) */
+            }
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.5); /* Lớp phủ mờ màu đen */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            position: relative; /* Đảm bảo container nằm trên video */
+        }
+        h1 {
+            font-size: 60px; /* Tăng kích thước chữ */
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #00FFFF; /* Màu cyan giống trong hình */
+            text-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF; /* Hiệu ứng phát sáng màu cyan */
+        }
+        label {
+            display: block;
+            text-align: left;
+            margin: 10px 0 5px;
+            font-size: 10px; /* Tăng kích thước chữ */
+            color: #FFFFFF; /* Màu trắng */
+            text-shadow: 0 0 5px #00FFFF, 0 0 10px #00FFFF; /* Hiệu ứng phát sáng màu cyan */
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #00FFFF; /* Viền màu cyan */
+            border-radius: 5px;
+            font-size: 14px;
+            background: linear-gradient(145deg, #1C2526, #0A3D62); /* Nền hi-tech đen-xanh */
+            color: #FFFFFF; /* Màu trắng cho chữ */
+            text-shadow: 0 0 5px #00FFFF; /* Hiệu ứng phát sáng nhẹ */
+            font-family: 'Orbitron', sans-serif; /* Font công nghệ cao */
+        }
+        input::placeholder, textarea::placeholder {
+            color: #BBBBBB; /* Màu xám nhạt cho placeholder */
+            text-shadow: none; /* Không áp dụng hiệu ứng phát sáng cho placeholder */
+        }
+        select option {
+            background: #1C2526; /* Nền tối cho các option */
+            color: #FFFFFF; /* Màu trắng cho chữ trong option */
+            text-shadow: 0 0 3px #00FFFF; /* Hiệu ứng phát sáng nhẹ */
+        }
+        .stars {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .star {
+            font-size: 24px;
+            color: #ccc;
+            cursor: pointer;
+        }
+        .star.selected {
+            color: #00FFFF; /* Màu cyan khi được chọn */
+            text-shadow: 0 0 5px #00FFFF; /* Hiệu ứng phát sáng nhẹ */
+        }
+        .submit-btn {
+            background: linear-gradient(145deg, #1C2526, #0A3D62); /* Nền hi-tech đen-xanh */
+            color: #FFFFFF; /* Màu trắng cho chữ */
+            text-shadow: 0 0 5px #00FFFF; /* Hiệu ứng phát sáng nhẹ */
+            padding: 10px 20px;
+            border: 1px solid #00FFFF; /* Viền màu cyan */
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+            font-family: 'Orbitron', sans-serif; /* Font công nghệ cao */
+        }
+        .submit-btn:hover {
+            background: linear-gradient(145deg, #0A3D62, #1C2526); /* Đảo gradient khi hover */
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .nav-button {
+            background: linear-gradient(145deg, #1C2526, #0A3D62); /* Nền hi-tech đen-xanh */
+            color: #FFFFFF; /* Màu trắng cho chữ */
+            text-shadow: 0 0 5px #00FFFF; /* Hiệu ứng phát sáng nhẹ */
+            padding: 10px 20px;
+            border: 1px solid #00FFFF; /* Viền màu cyan */
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: 'Orbitron', sans-serif; /* Font công nghệ cao */
+        }
+        .nav-button:hover {
+            background: linear-gradient(145deg, #0A3D62, #1C2526); /* Đảo gradient khi hover */
+        }
+        .nav-button img {
+            width: 16px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <!-- Nhúng video YouTube làm nền -->
+    <div class="video-background">
+        <iframe 
+            src="https://www.youtube.com/embed/c_V1iD6F1kk?autoplay=1&mute=1&controls=0&loop=1&playlist=c_V1iD6F1kk&modestbranding=1&showinfo=0" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <div class="container">
+        <h1>Feedback</h1>
+        <form id="feedbackForm">
+            <label for="name">Họ và tên:</label>
+            <input type="text" id="name" placeholder="Nhập họ và tên của bạn" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" placeholder="Nhập địa chỉ email của bạn" required>
+
+            <label>Đánh giá hệ thống:</label>
+            <div class="stars">
+                <span class="star" data-value="1">★</span>
+                <span class="star" data-value="2">★</span>
+                <span class="star" data-value="3">★</span>
+                <span class="star" data-value="4">★</span>
+                <span class="star" data-value="5">★</span>
+            </div>
+            <input type="hidden" id="rating" name="rating" value="0">
+
+            <label for="level">Độ chính xác của hệ thống:</label>
+            <select id="level" name="level">
+                <option value="">-- Chọn đánh giá --</option>
+                <option value="Rất chính xác">Rất chính xác</option>
+                <option value="Chính xác">Chính xác</option>
+                <option value="Bình thường">Bình thường</option>
+                <option value="Không chính xác">Không chính xác</option>
+            </select>
+
+            <label for="feedback">Góp ý của bạn:</label>
+            <textarea id="feedback" name="feedback" rows="5" placeholder="Nhập góp ý của bạn về hệ thống..."></textarea>
+
+            <button type="submit" class="submit-btn">Gửi đánh giá</button>
+        </form>
+
+        <!-- Nút chuyển trang -->
+        <div class="nav-buttons">
+            <button class="nav-button" onclick="window.location.href='/'">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/left.png" alt="Icon">
+                Hệ thống
+            </button>
+            <button class="nav-button" onclick="window.location.href='/members'">
+                Thành viên
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/right.png" alt="Icon">
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Xử lý đánh giá sao
+        const stars = document.querySelectorAll('.star');
+        const ratingInput = document.getElementById('rating');
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const value = star.getAttribute('data-value');
+                ratingInput.value = value;
+                stars.forEach(s => {
+                    s.classList.remove('selected');
+                    if (s.getAttribute('data-value') <= value) {
+                        s.classList.add('selected');
+                    }
+                });
+            });
+        });
+
+        // Xử lý gửi form (hiện tại chỉ hiển thị alert, bạn có thể thêm logic gửi dữ liệu nếu cần)
+        document.getElementById('feedbackForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Cảm ơn bạn đã gửi đánh giá!');
+        });
+    </script>
+</body>
+</html>
