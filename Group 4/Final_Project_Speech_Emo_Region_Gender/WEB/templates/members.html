@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thành viên</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap'); /* Font công nghệ cao */
+
+        body {
+            font-family: 'Orbitron', sans-serif; /* Font công nghệ cao */
+            background: url('../static/gioi_thieu_thanh_vien2.png') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+            position: relative;
+            margin: 0 auto;
+        }
+        .nav-buttons {
+            position: fixed;
+            top: 10px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+        }
+        .nav-button {
+            background: linear-gradient(145deg, #1C2526, #0A3D62); /* Nền hi-tech đen-xanh */
+            color: #FFFFFF; /* Màu trắng cho chữ */
+            text-shadow: 0 0 5px #00FFFF; /* Hiệu ứng phát sáng màu cyan */
+            padding: 10px 20px;
+            border: 1px solid #00FFFF; /* Viền màu cyan */
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: 'Orbitron', sans-serif; /* Font công nghệ cao */
+        }
+        .nav-button:hover {
+            background: linear-gradient(145deg, #0A3D62, #1C2526); /* Đảo gradient khi hover */
+        }
+        .nav-button img {
+            width: 16px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-buttons">
+            <button class="nav-button" onclick="window.location.href='/'">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/left.png" alt="Icon">
+                Quay lại trang chính
+            </button>
+            <button class="nav-button" onclick="window.location.href='/feedback'">
+                Feedback
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/right.png" alt="Icon">
+            </button>
+        </div>
+    </div>
+
+    <!-- Tự động phát nhạc -->
+    <audio autoplay loop>
+        <source src="../static/luu_thuy_kim_tien.wav" type="audio/wav">
+        Trình duyệt của bạn không hỗ trợ phát âm thanh.
+    </audio>
+</body>
+</html>

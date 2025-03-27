@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phân tích cảm xúc giọng nói</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap'); /* Font công nghệ cao */
+
+        body {
+            font-family: 'Orbitron', sans-serif; /* Font công nghệ cao */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative; /* Để video làm nền */
+            overflow: hidden; /* Ẩn phần thừa của video */
+        }
+        /* Định dạng video YouTube làm nền */
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Đặt video phía sau nội dung */
+        }
+        .video-background iframe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 100vh;
+            transform: translate(-50%, -50%); /* Căn giữa video */
+            object-fit: cover; /* Đảm bảo video phủ toàn màn hình */
+        }
+        /* Điều chỉnh tỷ lệ khung hình để video không bị méo */
+        @media (min-aspect-ratio: 16/9) {
+            .video-background iframe {
+                height: 56.25vw; /* 100 * (9/16) */
+            }
+        }
+        @media (max-aspect-ratio: 16/9) {
+            .video-background iframe {
+                width: 177.78vh; /* 100 * (16/9) */
+            }
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.5); /* Lớp phủ mờ màu đen */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+            position: relative; /* Đảm bảo container nằm trên video */
+        }
+        h1 {
+            font-size: 60px; /* Tăng kích thước chữ */
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #FFFFFF; /* Màu trắng */
+            text-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF; /* Hiệu ứng phát sáng màu cyan */
+        }
+        canvas {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 600px;
+            height: 150px;
+            background: transparent; /* Nền trong suốt cho canvas */
+            border: none; /* Bỏ khung viền */
+        }
+        .result-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .result-box {
+            width: 30%;
+            text-align: left;
+        }
+        .result-box label {
+            font-size: 24px; /* Tăng kích thước chữ */
+            font-weight: bold;
+            color: #FFFFFF; /* Màu trắng */
+            text-shadow: 0 0 5px #00FFFF, 0 0 10px #00FFFF; /* Hiệu ứng phát sáng màu cyan */
+        }
+        .result-box div {
+            margin-top: 5px;
+            padding: 10px;
+            border: 1px solid #00FFFF; /* Viền màu cyan */
+            border-radius: 5px;
+            background: linear-gradient(145deg, #1C2526, #0A3D62); /* Nền hi-tech đen-xanh */
+            font-size: 16px;
+            color: #FFFFFF; /* Màu trắng cho chữ "Đang chờ dữ liệu..." */
+            text-shadow: 0 0 5px #00FFFF; /* Hiệu ứng phát sáng nhẹ */
+        }
+        .result-box .accuracy {
+            font-size: 14px;
+            color: #00FFFF; /* Màu cyan để nổi bật */
+            text-shadow: 0 0 3px #00FFFF; /* Hiệu ứng phát sáng nhẹ */
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: 1px solid #00FFFF; /* Viền màu cyan */
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: 'Orbitron', sans-serif; /* Font công nghệ cao */
+            background: linear-gradient(145deg, #1C2526, #0A3D62); /* Nền hi-tech đen-xanh */
+            color: #FFFFFF; /* Màu trắng cho chữ */
+            text-shadow: 0 0 5px #00FFFF; /* Hiệu ứng phát sáng nhẹ */
+        }
+        #startBtn {
+            background: linear-gradient(145deg, #1C2526, #0A3D62); /* Nền hi-tech đen-xanh */
+            color: #FFFFFF;
+        }
+        #startBtn:hover {
+            background: linear-gradient(145deg, #0A3D62, #1C2526); /* Đảo gradient khi hover */
+        }
+        #startBtn:disabled {
+            background: linear-gradient(145deg, #1C2526, #0A3D62);
+            opacity: 0.5;
+        }
+        #stopBtn {
+            background: linear-gradient(145deg, #1C2526, #0A3D62); /* Nền hi-tech đen-xanh */
+            color: #FFFFFF;
+        }
+        #stopBtn:hover {
+            background: linear-gradient(145deg, #0A3D62, #1C2526); /* Đảo gradient khi hover */
+        }
+        #stopBtn:disabled {
+            background: linear-gradient(145deg, #1C2526, #0A3D62);
+            opacity: 0.5;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .nav-button {
+            background: linear-gradient(145deg, #1C2526, #0A3D62); /* Nền hi-tech đen-xanh */
+            color: #FFFFFF; /* Màu trắng cho chữ */
+            text-shadow: 0 0 5px #00FFFF; /* Hiệu ứng phát sáng nhẹ */
+            padding: 10px 20px;
+            border: 1px solid #00FFFF; /* Viền màu cyan */
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: 'Orbitron', sans-serif; /* Font công nghệ cao */
+        }
+        .nav-button:hover {
+            background: linear-gradient(145deg, #0A3D62, #1C2526); /* Đảo gradient khi hover */
+        }
+        .nav-button img {
+            width: 16px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <!-- Nhúng video YouTube làm nền -->
+    <div class="video-background">
+        <iframe 
+            src="https://www.youtube.com/embed/c_V1iD6F1kk?autoplay=1&mute=1&controls=0&loop=1&playlist=c_V1iD6F1kk&modestbranding=1&showinfo=0" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <div class="container">
+        <h1>Speech recognition system</h1>
+        <button id="startBtn">Record</button>
+        <button id="stopBtn" disabled>Stop recording</button>
+        <canvas id="waveform" width="600" height="150"></canvas>
+
+        <div class="result-container">
+            <div class="result-box">
+                <label>Emotion</label>
+                <div id="emotionResult">Đang chờ dữ liệu...</div>
+                <div id="emotionAccuracy" class="accuracy">accuracy: 0%</div>
+            </div>
+            <div class="result-box">
+                <label>Gender</label>
+                <div id="genderResult">Đang chờ dữ liệu...</div>
+                <div id="genderAccuracy" class="accuracy">accuracy: 0%</div>
+            </div>
+            <div class="result-box">
+                <label>Region</label>
+                <div id="regionResult">Đang chờ dữ liệu...</div>
+                <div id="regionAccuracy" class="accuracy">accuracy: 0%</div>
+            </div>
+        </div>
+
+        <!-- Nút chuyển trang -->
+        <div class="nav-buttons">
+            <button class="nav-button" onclick="window.location.href='/members'">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/left.png" alt="Icon">
+                Thành viên
+            </button>
+            <button class="nav-button" onclick="window.location.href='/feedback'">
+                Feedback
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/right.png" alt="Icon">
+            </button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
