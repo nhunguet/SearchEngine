@@ -1,0 +1,13 @@
+# Web Framework
+flask==2.2.3
+# Data Processing
+pandas==1.5.3
+numpy==1.24.2
+# Machine Learning
+scikit-learn==1.2.2
+# NLP - Vietnamese Specific
+underthesea==6.0.0
+# Visualization
+matplotlib==3.7.1
+# External Access
+pyngrok==5.2.1
